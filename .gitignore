@@ -1,0 +1,31 @@
+# Ignore build output directories
+/x64/
+/Library_project/x64/
+
+# Ignore Visual Studio configuration and build files
+.vs/
+*.vcxproj.user
+*.user
+*.suo
+
+# Ignore generated files from the build process
+/bin/
+/obj/
+
+# Ignore macOS or Windows system files
+Thumbs.db
+
+# Ignore user-specific files for IDEs (e.g., Visual Studio)
+*.suo
+*.user
+
+# Ignore log files and backups
+*.log
+*.bak
+
+# Ignore dependency directories
+dependencies/
+
+# Executables or DLLs
+*.exe
+*.dll
