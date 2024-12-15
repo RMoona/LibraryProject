@@ -51,6 +51,7 @@ int main()
 				case 2:
 					cout << "Viewing part of data...\n";
 					// Call function to view part of data
+
 					break;
 
 				case 3:
@@ -246,7 +247,8 @@ int main()
 
 		case 5:
 			cout << "Searching...\n";
-			// Call search functionality
+			readDataFromFile();
+			searchLoans(loans, loanCount, books, bookCount);
 			break;
 
 		case 6:

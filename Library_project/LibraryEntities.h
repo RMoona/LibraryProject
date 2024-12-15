@@ -18,9 +18,8 @@ struct Author
 struct Book
 {
 	string ISBN;
-	string barcode;
 	string title;
-	Author author; //Nested struct
+	Author author;
 };
 
 struct Reader

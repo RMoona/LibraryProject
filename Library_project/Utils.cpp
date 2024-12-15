@@ -74,8 +74,8 @@ void addBook()
 	cout << "Enter ISBN: ";
 	getline(cin, newBook.ISBN);
 
-	cout << "Enter barcode: ";
-	getline(cin, newBook.barcode);
+	/*cout << "Enter barcode: ";
+	getline(cin, newBook.barcode);*/
 
 	cout << "Enter book title: ";
 	getline(cin, newBook.title);
@@ -231,7 +231,7 @@ void addLoan()
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
@@ -239,7 +239,6 @@ void addLoan()
 		}
 	}
 	cin.ignore();
-
 
 	while (true)
 	{
@@ -250,7 +249,7 @@ void addLoan()
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
@@ -262,7 +261,6 @@ void addLoan()
 	cout << "Enter ISBN: ";
 	getline(cin, newLoan.ISBN);
 
-
 	while (true)
 	{
 		cout << "Enter borrow date (only integers in format YYYYMMDD): ";
@@ -272,7 +270,7 @@ void addLoan()
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
@@ -290,7 +288,7 @@ void addLoan()
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
@@ -299,7 +297,31 @@ void addLoan()
 	}
 	cin.ignore();
 
-	//and bool if it is/not returned
+	char returnStatus;
+	while (true)
+	{
+		cout << "Has the book been returned? (y/n): ";
+		cin >> returnStatus;
+
+		if (cin.fail())
+		{
+			cerr << "Invalid input. Please enter 'y' for yes or 'n' for no.\n";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		else if (returnStatus != 'y' && returnStatus != 'n')
+		{
+			cerr << "Invalid input. Please enter 'y' for yes or 'n' for no.\n";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		else
+		{
+			newLoan.isReturned = (returnStatus == 'y');
+			break;
+		}
+	}
+
 	loans[loanCount++] = newLoan;
 
 	cout << "Loan added successfully!\n";
@@ -334,7 +356,7 @@ void saveDataToFile()
 	for (int i = 0; i < bookCount; i++)
 	{
 		booksFile << books[i].ISBN << ";"
-			<< books[i].barcode << ";"
+			/*<< books[i].barcode << ";"*/
 			<< books[i].title << ";"
 			<< books[i].author.authorID << endl; // Include authorID
 	}
@@ -427,7 +449,7 @@ void readDataFromFile()
 		string temp;
 
 		getline(ss, books[bookCount].ISBN, ';');
-		getline(ss, books[bookCount].barcode, ';');
+		/*getline(ss, books[bookCount].barcode, ';');*/
 		getline(ss, books[bookCount].title, ';');
 
 		// Parse and assign the authorID
@@ -533,7 +555,7 @@ void displayAllData()
 		cout << left << setw(10) << "ID"
 			<< setw(20) << "First Name"
 			<< setw(20) << "Last Name" << endl;
-		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "---------------------------------------------------------------------------------------" << endl;
 
 		for (int i = 0; i < authorCount; i++)
 		{
@@ -551,15 +573,13 @@ void displayAllData()
 	if (bookCount > 0)
 	{
 		cout << left << setw(15) << "ISBN"
-			<< setw(15) << "Barcode"
 			<< setw(45) << "Title"
 			<< setw(10) << "Author ID" << endl;
-		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "---------------------------------------------------------------------------------------" << endl;
 
 		for (int i = 0; i < bookCount; i++)
 		{
 			cout << left << setw(15) << books[i].ISBN
-				<< setw(15) << books[i].barcode
 				<< setw(45) << books[i].title
 				<< setw(10) << books[i].author.authorID << endl;
 		}
@@ -578,7 +598,7 @@ void displayAllData()
 			<< setw(15) << "Borrow Date"
 			<< setw(15) << "Due Date"
 			<< setw(10) << "Returned" << endl;
-		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "---------------------------------------------------------------------------------------" << endl;
 
 		for (int i = 0; i < loanCount; i++)
 		{
@@ -586,8 +606,16 @@ void displayAllData()
 				<< setw(15) << loans[i].readerID
 				<< setw(15) << loans[i].ISBN
 				<< setw(15) << loans[i].borrowDate
-				<< setw(15) << loans[i].dueDate
-				<< setw(10) << (loans[i].isReturned ? "Yes" : "No") << endl;
+				<< setw(15) << loans[i].dueDate;
+
+			if (loans[i].isReturned)
+			{
+				cout << setw(10) << "Yes" << endl;
+			}
+			else
+			{
+				cout << setw(10) << "No" << endl;
+			}
 		}
 	}
 	else
@@ -603,7 +631,7 @@ void displayAllData()
 			<< setw(20) << "Last Name"
 			<< setw(30) << "Email"
 			<< setw(15) << "Phone" << endl;
-		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "---------------------------------------------------------------------------------------" << endl;
 
 		for (int i = 0; i < readerCount; i++)
 		{
@@ -663,17 +691,6 @@ void editBook(string ISBNToEdit)
 
 			cout << "Editing book with ISBN: " << books[i].ISBN << endl;
 			cin.ignore();
-
-			cout << "Current Barcode: " << books[i].barcode << endl;
-			cout << "Enter new barcode (leave empty to keep current): ";
-
-			string newBarcode;
-
-			getline(cin, newBarcode);  // Use getline to allow for blank input
-			if (!newBarcode.empty())
-			{
-				books[i].barcode = newBarcode;  // Update barcode if provided
-			}
 
 			cout << "Current Title: " << books[i].title << endl;
 			cout << "Enter new title (leave empty to keep current): ";
@@ -844,11 +861,11 @@ void editLoan(int loanIDToEdit)
 			int newBorrowDate;
 			string inputBorrowDate;
 
-			getline(cin, inputBorrowDate);  // Read as string
+			getline(cin, inputBorrowDate);
 
 			if (!inputBorrowDate.empty())
 			{
-				newBorrowDate = stoi(inputBorrowDate);  // Convert to integer
+				newBorrowDate = stoi(inputBorrowDate);
 				loans[i].borrowDate = newBorrowDate;
 			}
 
@@ -858,26 +875,26 @@ void editLoan(int loanIDToEdit)
 			int newDueDate;
 			string inputDueDate;
 
-			getline(cin, inputDueDate);  // Read as string
+			getline(cin, inputDueDate);
 
 			if (!inputDueDate.empty())
 			{
-				newDueDate = stoi(inputDueDate);  // Convert to integer
+				newDueDate = stoi(inputDueDate);
 				loans[i].dueDate = newDueDate;
 			}
 
 			cout << "Current Return Status: " << (loans[i].isReturned ? "Returned" : "Not Returned") << endl;
-			cout << "Is the loan returned? (yes/no): ";
+			cout << "Is the loan returned? (y/n): ";
 
 			string returnStatus;
 
 			getline(cin, returnStatus);
 
-			if (returnStatus == "yes")
+			if (returnStatus == "y")
 			{
 				loans[i].isReturned = true;
 			}
-			else if (returnStatus == "no")
+			else if (returnStatus == "n")
 			{
 				loans[i].isReturned = false;
 			}
@@ -890,5 +907,273 @@ void editLoan(int loanIDToEdit)
 	if (!loanFound)
 	{
 		cout << "Loan with ID " << loanIDToEdit << " not found.\n";
+	}
+}
+
+void searchLoanByLoanID(Loan loans[], int loanCount)
+{
+	int loanID;
+	cout << "Enter Loan ID to search: ";
+	cin >> loanID;
+	for (int i = 0; i < loanCount; i++)
+	{
+		if (loans[i].loanID == loanID)
+		{
+			cout << "Loan found for ID " << loanID << endl;
+			cout << left << setw(10) << "Loan ID"
+				<< setw(15) << "Reader ID"
+				<< setw(15) << "ISBN"
+				<< setw(15) << "Borrow Date"
+				<< setw(15) << "Due Date"
+				<< setw(10) << "Returned" << endl;
+			cout << "---------------------------------------------------------------------------------------" << endl;
+
+			cout << left << setw(10) << loans[i].loanID
+				<< setw(15) << loans[i].readerID
+				<< setw(15) << loans[i].ISBN
+				<< setw(15) << loans[i].borrowDate
+				<< setw(15) << loans[i].dueDate;
+			if (loans[i].isReturned)
+			{
+				cout << setw(10) << "Yes" << endl;
+			}
+			else
+			{
+				cout << setw(10) << "No" << endl;
+			}
+			return;
+		}
+	}
+	cout << "Loan not found.\n";
+}
+
+void searchLoanByISBN(Loan loans[], int loanCount)
+{
+	string ISBN;
+	cout << "Enter ISBN to search: ";
+	cin >> ISBN;
+	for (int i = 0; i < loanCount; i++)
+	{
+		if (loans[i].ISBN == ISBN)
+		{
+			cout << "Loan found for ISBN" << ISBN << endl;
+			cout << left << setw(10) << "Loan ID"
+				<< setw(15) << "Reader ID"
+				<< setw(15) << "ISBN"
+				<< setw(15) << "Borrow Date"
+				<< setw(15) << "Due Date"
+				<< setw(10) << "Returned" << endl;
+			cout << "---------------------------------------------------------------------------------------" << endl;
+
+			cout << left << setw(10) << loans[i].loanID
+				<< setw(15) << loans[i].readerID
+				<< setw(15) << loans[i].ISBN
+				<< setw(15) << loans[i].borrowDate
+				<< setw(15) << loans[i].dueDate;
+			if (loans[i].isReturned)
+			{
+				cout << setw(10) << "Yes" << endl;
+			}
+			else
+			{
+				cout << setw(10) << "No" << endl;
+			}
+			return;
+		}
+	}
+	cout << "Loan not found.\n";
+}
+
+void searchLoanByBorrowDate(Loan loans[], int loanCount)
+{
+	int borrowDate;
+	cout << "Enter borrow date (YYYYMMDD): ";
+	cin >> borrowDate;
+
+	bool found = false;
+	for (int i = 0; i < loanCount; i++)
+	{
+		if (loans[i].borrowDate == borrowDate)
+		{
+			if (!found)
+			{
+				cout << "Loans found for Borrow Date " << borrowDate << ":\n";
+				cout << left << setw(10) << "Loan ID"
+					<< setw(15) << "Reader ID"
+					<< setw(15) << "ISBN"
+					<< setw(15) << "Borrow Date"
+					<< setw(15) << "Due Date"
+					<< setw(10) << "Returned" << endl;
+				cout << "---------------------------------------------------------------------------------------" << endl;
+				found = true;
+			}
+
+			cout << left << setw(10) << loans[i].loanID
+				<< setw(15) << loans[i].readerID
+				<< setw(15) << loans[i].ISBN
+				<< setw(15) << loans[i].borrowDate
+				<< setw(15) << loans[i].dueDate;
+			if (loans[i].isReturned)
+			{
+				cout << setw(10) << "Yes" << endl;
+			}
+			else
+			{
+				cout << setw(10) << "No" << endl;
+			}
+		}
+	}
+
+	if (!found)
+	{
+		cout << "No loans found with the borrow date " << borrowDate << ".\n";
+	}
+}
+
+void searchLoanByReturnStatus(Loan loans[], int loanCount)
+{
+	char returnStatus;
+	cout << "Enter return status (y/n): ";
+	cin >> returnStatus;
+
+	bool found = false;
+	for (int i = 0; i < loanCount; i++)
+	{
+		if ((returnStatus == 'y' && loans[i].isReturned) || (returnStatus == 'n' && !loans[i].isReturned))
+		{
+			if (!found)
+			{
+				cout << "Loans found for Return Status: ";
+				if (returnStatus == 'y')
+				{
+					cout << "Returned";
+				}
+				else
+				{
+					cout << "Not Returned";
+				}
+				cout << ":\n";
+				cout << left << setw(10) << "Loan ID"
+					<< setw(15) << "Reader ID"
+					<< setw(15) << "ISBN"
+					<< setw(15) << "Borrow Date"
+					<< setw(15) << "Due Date"
+					<< setw(10) << "Returned" << endl;
+				cout << "---------------------------------------------------------------------------------------" << endl;
+				found = true;
+			}
+
+			cout << left << setw(10) << loans[i].loanID
+				<< setw(15) << loans[i].readerID
+				<< setw(15) << loans[i].ISBN
+				<< setw(15) << loans[i].borrowDate
+				<< setw(15) << loans[i].dueDate;
+			if (loans[i].isReturned)
+			{
+				cout << setw(10) << "Yes" << endl;
+			}
+			else
+			{
+				cout << setw(10) << "No" << endl;
+			}
+		}
+	}
+
+	if (!found)
+	{
+		cout << "No loans found with the specified return status.\n";
+	}
+}
+
+void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount)
+{
+	string authorLastName;
+
+	cout << "Enter author's last name: ";
+	cin.ignore();
+	getline(cin, authorLastName);
+
+	bool found = false;
+
+	for (int i = 0; i < loanCount; i++)
+	{
+		// Search for the book associated with the loan using the ISBN
+		for (int j = 0; j < bookCount; j++)
+		{
+			// Check if the loan's ISBN matches the book's ISBN, and if the author's name matches
+			if (loans[i].ISBN == books[j].ISBN && books[j].author.lastName == authorLastName)
+			{
+				if (!found)
+				{
+					cout << "Loans found for Author " << books[j].author.firstName
+						<< " " << books[j].author.lastName << ":\n";
+					cout << left << setw(10) << "Loan ID"
+						<< setw(15) << "Reader ID"
+						<< setw(15) << "ISBN"
+						<< setw(15) << "Borrow Date"
+						<< setw(15) << "Due Date"
+						<< setw(10) << "Returned" << endl;
+					cout << "---------------------------------------------------------------------------------------" << endl;
+					found = true;
+				}
+
+				cout << left << setw(10) << loans[i].loanID
+					<< setw(15) << loans[i].readerID
+					<< setw(15) << loans[i].ISBN
+					<< setw(15) << loans[i].borrowDate
+					<< setw(15) << loans[i].dueDate;
+
+				if (loans[i].isReturned)
+				{
+					cout << setw(10) << "Yes" << endl;
+				}
+				else
+				{
+					cout << setw(10) << "No" << endl;
+				}
+			}
+		}
+	}
+
+	if (!found)
+	{
+		cout << "No loans found for Author " << authorLastName << ".\n";
+	}
+}
+
+void searchLoans(Loan loans[], int loanCount, Book books[], int bookCount)
+{
+	int choice;
+	cout << "\nSEARCH MENU\n";
+	cout << "------------------\n";
+	cout << "Select search criterion:\n";
+	cout << "1. Search by Loan ID\n";
+	cout << "2. Search by ISBN\n";
+	cout << "3. Search by Borrow Date\n";
+	cout << "4. Search by Return Status\n";
+	cout << "5. Search by Author\n";
+	cout << "------------------\n";
+	cout << "Enter your choice (1-5): ";
+	cin >> choice;
+
+	switch (choice)
+	{
+	case 1:
+		searchLoanByLoanID(loans, loanCount);
+		break;
+	case 2:
+		searchLoanByISBN(loans, loanCount);
+		break;
+	case 3:
+		searchLoanByBorrowDate(loans, loanCount);
+		break;
+	case 4:
+		searchLoanByReturnStatus(loans, loanCount);
+		break;
+	case 5:
+		searchLoanByAuthor(loans, loanCount, books, bookCount);
+		break;
+	default:
+		cout << "Invalid choice.\n";
 	}
 }
