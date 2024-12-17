@@ -18,16 +18,29 @@ void addAuthor();
 void addBook();
 void addReader();
 void addLoan();
+void calculateActiveLoans(Loan loans[], int loanCount, Reader readers[], int readerCount);
 void saveDataToFile();
 void readDataFromFile();
+void displayAuthors();
+void displayBooks();
+void displayLoans();
+void displayReaders();
 void displayAllData();
 void editAuthor(int authorIDToEdit);
 void editBook(string ISBNToEdit);
 void editReader(int readerIDToEdit);
 void editLoan(int loanIDToEdit);
-void searchLoans(Loan loans[], int loanCount, Book books[], int bookCount);
 void searchLoanByLoanID(Loan loans[], int loanCount); //search by int
 void searchLoanByISBN(Loan loans[], int loanCount); //search by string
 void searchLoanByBorrowDate(Loan loans[], int loanCount);
 void searchLoanByReturnStatus(Loan loans[], int loanCount);
 void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount);
+void deleteAuthor(int authorID);
+void deleteBook(const string& ISBN);
+void deleteReader(int readerID);
+void deleteLoan(int loanID);
+void sortAuthorsByLastName(Author authors[], int authorCount);
+void sortReadersByReaderID(Reader readers[], int readerCount);
+void sortBooksByAuthorLastName(Book books[], int bookCount); //sorting by complex structure
+int calculateTotalActiveLoans(Reader readers[], int readerCount);
+Author calculateMostBorrowedAuthor(Loan loans[], int loanCount, Book books[], int bookCount); //calculation by complex structure

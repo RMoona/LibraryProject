@@ -169,7 +169,7 @@ void addReader()
 {
 	if (readerCount >= MAX_READERS)
 	{
-		cerr << "Error: Maximum number of loans reached.\n";
+		cerr << "Error: Maximum number of readers reached.\n";
 		return;
 	}
 
@@ -193,23 +193,50 @@ void addReader()
 	}
 	cin.ignore();
 
-	cout << "Enter reader's First Name: ";
+	cout << "Enter reader's first name: ";
 	getline(cin, newReader.firstName);
 
-	cout << "Enter reader's Last Name: ";
+	cout << "Enter reader's last name: ";
 	getline(cin, newReader.lastName);
 
 	cout << "Enter reader's e-mail: ";
 	getline(cin, newReader.contactEmail);
 
-	cout << "Enter reader's Phone Number: ";
+	cout << "Enter reader's phone number: ";
 	getline(cin, newReader.phoneNumber);
 
-	readers[readerCount++] = newReader;
-	//add activeLoans logic (count how many books have this readerID
+	newReader.activeLoans = 0;
 
+	readers[readerCount++] = newReader;
 
 	cout << "Reader added successfully!\n";
+}
+
+void calculateActiveLoans(Loan loans[], int loanCount, Reader readers[], int readerCount)
+{
+	// Reset the activeLoans for all readers to 0
+	for (int i = 0; i < readerCount; i++)
+	{
+		readers[i].activeLoans = 0;
+	}
+
+	// Iterate through all loans
+	for (int i = 0; i < loanCount; i++)
+	{
+		// Check if the loan is active (not returned)
+		if (!loans[i].isReturned)
+		{
+			// Find the reader corresponding to this loan and increment their activeLoans
+			for (int j = 0; j < readerCount; j++)
+			{
+				if (readers[j].readerID == loans[i].readerID)
+				{
+					readers[j].activeLoans++;
+					break;
+				}
+			}
+		}
+	}
 }
 
 void addLoan()
@@ -222,6 +249,7 @@ void addLoan()
 
 	Loan newLoan;
 
+	// Prompt for loan ID
 	while (true)
 	{
 		cout << "Enter loan ID (only integers allowed): ";
@@ -240,6 +268,7 @@ void addLoan()
 	}
 	cin.ignore();
 
+	// Prompt for reader ID
 	while (true)
 	{
 		cout << "Enter reader ID (only integers allowed): ";
@@ -258,8 +287,30 @@ void addLoan()
 	}
 	cin.ignore();
 
-	cout << "Enter ISBN: ";
-	getline(cin, newLoan.ISBN);
+	while (true)
+	{
+		cout << "Enter ISBN: ";
+		getline(cin, newLoan.ISBN);
+
+		bool isAlreadyOnLoan = false;
+		for (int i = 0; i < loanCount; i++)
+		{
+			if (loans[i].ISBN == newLoan.ISBN && !loans[i].isReturned)
+			{
+				isAlreadyOnLoan = true;
+				break;
+			}
+		}
+
+		if (isAlreadyOnLoan)
+		{
+			cerr << "Error: This book is already on loan. Please edit the loan in the EDIT DATA MENU if the book has been returned.\n";
+		}
+		else
+		{
+			break;
+		}
+	}
 
 	while (true)
 	{
@@ -297,32 +348,11 @@ void addLoan()
 	}
 	cin.ignore();
 
-	char returnStatus;
-	while (true)
-	{
-		cout << "Has the book been returned? (y/n): ";
-		cin >> returnStatus;
-
-		if (cin.fail())
-		{
-			cerr << "Invalid input. Please enter 'y' for yes or 'n' for no.\n";
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
-		else if (returnStatus != 'y' && returnStatus != 'n')
-		{
-			cerr << "Invalid input. Please enter 'y' for yes or 'n' for no.\n";
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
-		else
-		{
-			newLoan.isReturned = (returnStatus == 'y');
-			break;
-		}
-	}
+	newLoan.isReturned = false;
 
 	loans[loanCount++] = newLoan;
+
+	calculateActiveLoans(loans, loanCount, readers, readerCount);
 
 	cout << "Loan added successfully!\n";
 }
@@ -393,7 +423,8 @@ void saveDataToFile()
 			<< readers[i].firstName << ";"
 			<< readers[i].lastName << ";"
 			<< readers[i].contactEmail << ";"
-			<< readers[i].phoneNumber << endl;
+			<< readers[i].phoneNumber << ";"
+			<< readers[i].activeLoans << endl;
 	}
 	readersFile.close();
 }
@@ -449,7 +480,6 @@ void readDataFromFile()
 		string temp;
 
 		getline(ss, books[bookCount].ISBN, ';');
-		/*getline(ss, books[bookCount].barcode, ';');*/
 		getline(ss, books[bookCount].title, ';');
 
 		// Parse and assign the authorID
@@ -534,6 +564,8 @@ void readDataFromFile()
 			getline(ss, readers[readerCount].lastName, ';');
 			getline(ss, readers[readerCount].contactEmail, ';');
 			getline(ss, readers[readerCount].phoneNumber, ';');
+			getline(ss, temp, ';');
+			readers[readerCount].activeLoans = stoi(temp);
 			readerCount++;
 
 			if (readerCount == MAX_READERS)
@@ -547,7 +579,7 @@ void readDataFromFile()
 	}
 }
 
-void displayAllData()
+void displayAuthors()
 {
 	cout << "\nAUTHORS:\n";
 	if (authorCount > 0)
@@ -568,7 +600,10 @@ void displayAllData()
 	{
 		cout << "No authors found.\n";
 	}
+}
 
+void displayBooks()
+{
 	cout << "\nBOOKS:\n";
 	if (bookCount > 0)
 	{
@@ -588,7 +623,10 @@ void displayAllData()
 	{
 		cout << "No books found.\n";
 	}
+}
 
+void displayLoans()
+{
 	cout << "\nLOANS:\n";
 	if (loanCount > 0)
 	{
@@ -609,20 +647,19 @@ void displayAllData()
 				<< setw(15) << loans[i].dueDate;
 
 			if (loans[i].isReturned)
-			{
 				cout << setw(10) << "Yes" << endl;
-			}
 			else
-			{
 				cout << setw(10) << "No" << endl;
-			}
 		}
 	}
 	else
 	{
 		cout << "No loans found.\n";
 	}
+}
 
+void displayReaders()
+{
 	cout << "\nREADERS:\n";
 	if (readerCount > 0)
 	{
@@ -630,8 +667,9 @@ void displayAllData()
 			<< setw(20) << "First Name"
 			<< setw(20) << "Last Name"
 			<< setw(30) << "Email"
-			<< setw(15) << "Phone" << endl;
-		cout << "---------------------------------------------------------------------------------------" << endl;
+			<< setw(15) << "Phone"
+			<< setw(10) << "Active loans" << endl;
+		cout << "-----------------------------------------------------------------------------------------------------------" << endl;
 
 		for (int i = 0; i < readerCount; i++)
 		{
@@ -639,13 +677,22 @@ void displayAllData()
 				<< setw(20) << readers[i].firstName
 				<< setw(20) << readers[i].lastName
 				<< setw(30) << readers[i].contactEmail
-				<< setw(15) << readers[i].phoneNumber << endl;
+				<< setw(15) << readers[i].phoneNumber 
+				<< setw(10) << readers[i].activeLoans << endl;
 		}
 	}
 	else
 	{
 		cout << "No readers found.\n";
 	}
+}
+
+void displayAllData()
+{
+	displayAuthors();
+	displayBooks();
+	displayLoans();
+	displayReaders();
 }
 
 void editAuthor(int authorIDToEdit)
@@ -791,20 +838,6 @@ void editReader(int readerIDToEdit)
 				readers[i].phoneNumber = newPhoneNumber;
 			}
 
-			cout << "Current Active Loans: " << readers[i].activeLoans << endl;
-			cout << "Enter new Active Loans (leave empty to keep current): ";
-
-			int newActiveLoans;
-			string inputActiveLoans;
-
-			getline(cin, inputActiveLoans);  // Read as string
-
-			if (!inputActiveLoans.empty())
-			{
-				newActiveLoans = stoi(inputActiveLoans);  // Convert to integer
-				readers[i].activeLoans = newActiveLoans;
-			}
-
 			cout << "Reader updated successfully!\n";
 			break;
 		}
@@ -900,6 +933,9 @@ void editLoan(int loanIDToEdit)
 			}
 
 			cout << "Loan updated successfully!\n";
+
+			calculateActiveLoans(loans, loanCount, readers, readerCount);
+
 			break;
 		}
 	}
@@ -1141,39 +1177,189 @@ void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount
 	}
 }
 
-void searchLoans(Loan loans[], int loanCount, Book books[], int bookCount)
+void deleteAuthor(int authorID)
 {
-	int choice;
-	cout << "\nSEARCH MENU\n";
-	cout << "------------------\n";
-	cout << "Select search criterion:\n";
-	cout << "1. Search by Loan ID\n";
-	cout << "2. Search by ISBN\n";
-	cout << "3. Search by Borrow Date\n";
-	cout << "4. Search by Return Status\n";
-	cout << "5. Search by Author\n";
-	cout << "------------------\n";
-	cout << "Enter your choice (1-5): ";
-	cin >> choice;
-
-	switch (choice)
+	bool deleted = false;
+	for (int i = 0; i < authorCount; i++)
 	{
-	case 1:
-		searchLoanByLoanID(loans, loanCount);
-		break;
-	case 2:
-		searchLoanByISBN(loans, loanCount);
-		break;
-	case 3:
-		searchLoanByBorrowDate(loans, loanCount);
-		break;
-	case 4:
-		searchLoanByReturnStatus(loans, loanCount);
-		break;
-	case 5:
-		searchLoanByAuthor(loans, loanCount, books, bookCount);
-		break;
-	default:
-		cout << "Invalid choice.\n";
+		if (authors[i].authorID == authorID)
+		{
+			for (int j = i; j < authorCount - 1; j++)
+			{
+				authors[j] = authors[j + 1];  // Move the authors to the left (up in the file) not to have empty lines
+			}
+			authorCount--;
+			cout << "Author with ID " << authorID << " deleted.\n";
+			deleted = true;
+			break;
+		}
 	}
+	if (!deleted)
+	{
+		cout << "Author not found.\n";
+	}
+}
+
+void deleteBook(const string& ISBN)
+{
+	bool deleted = false;
+	for (int i = 0; i < bookCount; i++)
+	{
+		if (books[i].ISBN == ISBN)
+		{
+			for (int j = i; j < bookCount - 1; j++)
+			{
+				books[j] = books[j + 1];
+			}
+			bookCount--;
+			cout << "Book with ISBN " << ISBN << " deleted.\n";
+			deleted = true;
+			break;
+		}
+	}
+	if (!deleted)
+	{
+		cout << "Book not found.\n";
+	}
+}
+
+void deleteReader(int readerID)
+{
+	bool deleted = false;
+	for (int i = 0; i < readerCount; i++)
+	{
+		if (readers[i].readerID == readerID)
+		{
+			for (int j = i; j < readerCount - 1; j++)
+			{
+				readers[j] = readers[j + 1];
+			}
+			readerCount--;
+			cout << "Reader with ID " << readerID << " deleted.\n";
+			deleted = true;
+			break;
+		}
+	}
+	if (!deleted)
+	{
+		cout << "Reader not found.\n";
+	}
+}
+
+void deleteLoan(int loanID)
+{
+	bool deleted = false;
+	for (int i = 0; i < loanCount; i++)
+	{
+		if (loans[i].loanID == loanID)
+		{
+			for (int j = i; j < loanCount - 1; j++)
+			{
+				loans[j] = loans[j + 1];
+			}
+			loanCount--;
+			cout << "Loan with ID " << loanID << " deleted.\n";
+			deleted = true;
+			break;
+		}
+	}
+	if (!deleted)
+	{
+		cout << "Loan not found.\n";
+	}
+}
+
+void sortAuthorsByLastName(Author authors[], int authorCount)
+{
+	for (int i = 0; i < authorCount - 1; i++)
+	{
+		for (int j = i + 1; j < authorCount; j++)
+		{
+			if (authors[i].lastName > authors[j].lastName)
+			{
+				Author temp = authors[i];
+				authors[i] = authors[j];
+				authors[j] = temp;
+			}
+		}
+	}
+}
+
+void sortReadersByReaderID(Reader readers[], int readerCount)
+{
+	for (int i = 0; i < readerCount - 1; i++)
+	{
+		for (int j = i + 1; j < readerCount; j++)
+		{
+			if (readers[i].readerID > readers[j].readerID)
+			{
+				Reader temp = readers[i];
+				readers[i] = readers[j];
+				readers[j] = temp;
+			}
+		}
+	}
+}
+
+void sortBooksByAuthorLastName(Book books[], int bookCount)
+{
+	for (int i = 0; i < bookCount - 1; i++)
+	{
+		for (int j = i + 1; j < bookCount; j++)
+		{
+			if (books[i].author.lastName > books[j].author.lastName)
+			{
+				Book temp = books[i];
+				books[i] = books[j];
+				books[j] = temp;
+			}
+		}
+	}
+}
+
+int calculateTotalActiveLoans(Reader readers[], int readerCount)
+{
+	int totalActiveLoans = 0;
+	for (int i = 0; i < readerCount; i++)
+	{
+		totalActiveLoans += readers[i].activeLoans;
+	}
+	return totalActiveLoans;
+}
+
+Author calculateMostBorrowedAuthor(Loan loans[], int loanCount, Book books[], int bookCount)
+{
+	int authorLoanCount[MAX_AUTHORS] = { 0 };  // Array to track loan counts for each author
+
+	// Loop through loans to count how many times each author has been borrowed
+	for (int i = 0; i < loanCount; i++)
+	{
+		if (!loans[i].isReturned)  // Consider only active loans
+		{
+			// Find the book's author based on ISBN
+			for (int j = 0; j < bookCount; j++)
+			{
+				if (books[j].ISBN == loans[i].ISBN)
+				{
+					// Increment the loan count for this author
+					authorLoanCount[books[j].author.authorID]++;
+					break;
+				}
+			}
+		}
+	}
+
+	// Find the author with the maximum number of loans
+	int maxLoans = 0;
+	int mostBorrowedAuthorID = 0;
+	for (int i = 0; i < MAX_AUTHORS; i++)
+	{
+		if (authorLoanCount[i] > maxLoans)
+		{
+			maxLoans = authorLoanCount[i];
+			mostBorrowedAuthorID = i;
+		}
+	}
+
+	return authors[mostBorrowedAuthorID];  // Return the most borrowed author
 }

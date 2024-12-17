@@ -8,5 +8,32 @@
 9780743477116;Hamlet;8
 9780743273565;The Great Gatsby;9
 9780141439471;Frankenstein;10
-9780312345678;Mansfield Park;2
-9780134767652;The Shining;12
+9780142437339;Moby-Dick;11
+9780141441146;Jane Eyre;13
+9780140445013;Around the World in Eighty Days;14
+9780140448908;Les Misérables;15
+9780241968567;One Hundred Years of Solitude;16
+9780805211061;The Metamorphosis;17
+9780486278070;The Picture of Dorian Gray;18
+9780140447932;Anna Karenina;19
+9780140449134;Crime and Punishment;20
+9780140449172;Twenty Thousand Leagues Under the Sea;14
+9780142437803;Toilers of the Sea;15
+9780140447871;Love in the Time of Cholera;16
+9780140449455;Notes from Underground;20
+9780486415865;A Portrait of the Artist as a Young Man;17
+9780192833745;The Brothers Karamazov;20
+9780141192468;The Importance of Being Earnest;18
+9780140449264;War and Peace;19
+9780486282114;Billy Budd, Sailor;11
+9780140449448;The Death of Ivan Ilyich;19
+9780140439199;Shirley;13
+9780140186475;Villette;13
+9780142437261;The Confidence-Man;11
+9780140449127;The Idiot;20
+9780140431377;Agnes Grey;12
+9780140434774;The Tenant of Wildfell Hall;12
+9780140449202;Resurrection;19
+9780140448199;A Gentle Creature;20
+9780486282115;Bartleby, the Scrivener;11
+9780140434828;The Professor;13

@@ -8,5 +8,13 @@
 8;William;Shakespeare
 9;F. Scott;Fitzgerald
 10;Mary;Shelley
-11;Juris;Alunans
-12;Stephen;King
+11;Herman;Melville
+12;Anne;Bronte
+13;Charlotte;Bronte
+14;Jules;Verne
+15;Victor;Hugo
+16;Gabriel Garcia;Marquez
+17;Franz;Kafka
+18;Oscar;Wilde
+19;Leo;Tolstoy
+20;Fyodor;Dostoevsky
