@@ -9,10 +9,11 @@ int main()
 {
 	int mainMenuChoice;
 	int totalActiveLoans = 0;
-	Author mostBorrowedAuthor;
 
 	do
 	{
+		cout << "\n~ WELCOME TO LIBRARY MANAGEMENT SYSTEM ~\n";
+
 		cout << "\nMAIN MENU\n";
 		cout << "__________________\n";
 		cout << "1. View data\n";
@@ -76,11 +77,7 @@ int main()
 							readDataFromFile();
 							sortAuthorsByLastName(authors, authorCount);
 							displayAuthors();
-
-							mostBorrowedAuthor = calculateMostBorrowedAuthor(loans, loanCount, books, bookCount);
-
-							// Output the result
-							cout << "Most borrowed author: " << mostBorrowedAuthor.firstName << " " << mostBorrowedAuthor.lastName << endl;
+							cout << endl;
 
 							break;
 

@@ -43,4 +43,3 @@ void sortAuthorsByLastName(Author authors[], int authorCount);
 void sortReadersByReaderID(Reader readers[], int readerCount);
 void sortBooksByAuthorLastName(Book books[], int bookCount); //sorting by complex structure
 int calculateTotalActiveLoans(Reader readers[], int readerCount);
-Author calculateMostBorrowedAuthor(Loan loans[], int loanCount, Book books[], int bookCount); //calculation by complex structure

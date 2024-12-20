@@ -37,16 +37,31 @@ void addAuthor()
 		if (cin.fail())
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
-			cin.clear();  // Clear the error flag
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
-			break;
+			bool authorIdExists = false;
+			for (int i = 0; i < authorCount; ++i)
+			{
+				if (authors[i].authorID == newAuthor.authorID)
+				{
+					authorIdExists = true;
+					break;
+				}
+			}
+			if (authorIdExists)
+			{
+				cerr << "Error: Author ID already exists. Please enter a unique ID.\n";
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 	cin.ignore();
-
 
 	cout << "Enter author's First Name: ";
 	cin >> newAuthor.firstName;
@@ -71,98 +86,103 @@ void addBook()
 	cin.ignore();
 
 	Book newBook;
-	cout << "Enter ISBN: ";
-	getline(cin, newBook.ISBN);
 
-	/*cout << "Enter barcode: ";
-	getline(cin, newBook.barcode);*/
+	while (true)
+	{
+		cout << "Enter ISBN (13 characters): ";
+		getline(cin, newBook.ISBN);
+
+		if (newBook.ISBN.length() != 13)
+		{
+			cout << "Invalid ISBN. It must be 13 characters long.\n";
+		}
+		else
+		{
+			bool isbnExists = false;
+			for (int i = 0; i < bookCount; ++i)
+			{
+				if (books[i].ISBN == newBook.ISBN)
+				{
+					isbnExists = true;
+					break;
+				}
+			}
+			if (isbnExists)
+			{
+				cerr << "Error: ISBN already exists. Please enter a unique ISBN.\n";
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 
 	cout << "Enter book title: ";
 	getline(cin, newBook.title);
 
-	int authorID;
-	bool validAuthorID = false;
-
-	// Validate the authorID input
-	while (!validAuthorID)
+	while (true)
 	{
+		int authorID;
+		bool validAuthorID = false;
 		cout << "Enter author ID (integer only): ";
 		cin >> authorID;
 
 		if (cin.fail())
 		{
-			// If the input is not an integer, clear the error flag and ignore the rest of the input
+			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Invalid input. Please enter an integer for author ID.\n";
 		}
 		else
 		{
-			validAuthorID = true; // If valid, break the loop
+			validAuthorID = true;
 		}
-	}
-	cin.ignore(); // Clear the newline character after reading the integer
 
-	// Check if the author exists
-	bool authorFound = false;
-	for (int i = 0; i < authorCount; i++)
-	{
-		if (authors[i].authorID == authorID)
+		if (validAuthorID)
 		{
-			// If the author is found, assign this author to the Book's author field
-			newBook.author = authors[i];
-			authorFound = true;
+			bool authorFound = false;
+			for (int i = 0; i < authorCount; i++)
+			{
+				if (authors[i].authorID == authorID)
+				{
+					newBook.author = authors[i];
+					authorFound = true;
+					break;
+				}
+			}
+
+			if (!authorFound)
+			{
+				cout << "Author not found. Please add a new author.\n";
+
+				if (authorCount >= MAX_AUTHORS)
+				{
+					cerr << "Error: Maximum number of authors reached.\n";
+					return;
+				}
+
+				Author newAuthor;
+				newAuthor.authorID = authorID;
+
+				cin.ignore();
+				cout << "Enter author's first name: ";
+				getline(cin, newAuthor.firstName);
+
+				cout << "Enter author's last name: ";
+				getline(cin, newAuthor.lastName);
+
+				authors[authorCount++] = newAuthor;
+
+				newBook.author = newAuthor;
+			}
+
 			break;
 		}
 	}
 
-	if (!authorFound)
-	{
-		cout << "Author not found. Adding a new author.\n";
-
-		// Check if the authorID already exists in the authors array
-		for (int i = 0; i < authorCount; i++)
-		{
-			if (authors[i].authorID == authorID)
-			{
-				cout << "Error: Author with this ID already exists.\n";
-				return;
-			}
-		}
-
-		// Add the new author to the authors array if not already added
-		Author newAuthor;
-		newAuthor.authorID = authorID;
-
-		cout << "Enter author's first name: ";
-		getline(cin, newAuthor.firstName);
-
-		cout << "Enter author's last name: ";
-		getline(cin, newAuthor.lastName);
-
-		if (authorCount < MAX_AUTHORS) {
-			authors[authorCount++] = newAuthor; // Add the new author to the authors array
-		}
-		else
-		{
-			cerr << "Error: Maximum number of authors reached.\n";
-			return;
-		}
-
-		// Assign the new author to the book
-		newBook.author = newAuthor;
-	}
-
-	// Add the new book to the books array
-	if (bookCount < MAX_BOOKS)
-	{
-		books[bookCount++] = newBook;
-		cout << "Book added successfully!\n";
-	}
-	else
-	{
-		cerr << "Error: Maximum number of books reached.\n";
-	}
+	books[bookCount++] = newBook;
+	cout << "Book added successfully!\n";
 }
 
 void addReader()
@@ -184,11 +204,28 @@ void addReader()
 		{
 			cerr << "Invalid input. Please enter a valid integer.\n";
 			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');  // ignores all characters up to newline 
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
 		else
 		{
-			break;
+			bool readerIdExists = false;
+			for (int i = 0; i < readerCount; ++i)
+			{
+				if (readers[i].readerID == newReader.readerID)
+				{
+					readerIdExists = true;
+					break;
+				}
+			}
+
+			if (readerIdExists)
+			{
+				cerr << "Error: Reader ID already exists. Please enter a unique ID.\n";
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 	cin.ignore();
@@ -214,19 +251,14 @@ void addReader()
 
 void calculateActiveLoans(Loan loans[], int loanCount, Reader readers[], int readerCount)
 {
-	// Reset the activeLoans for all readers to 0
 	for (int i = 0; i < readerCount; i++)
 	{
 		readers[i].activeLoans = 0;
 	}
-
-	// Iterate through all loans
 	for (int i = 0; i < loanCount; i++)
 	{
-		// Check if the loan is active (not returned)
 		if (!loans[i].isReturned)
 		{
-			// Find the reader corresponding to this loan and increment their activeLoans
 			for (int j = 0; j < readerCount; j++)
 			{
 				if (readers[j].readerID == loans[i].readerID)
@@ -247,9 +279,10 @@ void addLoan()
 		return;
 	}
 
+	cin.ignore();
+
 	Loan newLoan;
 
-	// Prompt for loan ID
 	while (true)
 	{
 		cout << "Enter loan ID (only integers allowed): ";
@@ -263,12 +296,28 @@ void addLoan()
 		}
 		else
 		{
-			break;
+			bool loanIdExists = false;
+			for (int i = 0; i < loanCount; ++i)
+			{
+				if (loans[i].loanID == newLoan.loanID)
+				{
+					loanIdExists = true;
+					break;
+				}
+			}
+
+			if (loanIdExists)
+			{
+				cerr << "Error: Loan ID already exists. Please enter a unique ID.\n";
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 	cin.ignore();
 
-	// Prompt for reader ID
 	while (true)
 	{
 		cout << "Enter reader ID (only integers allowed): ";
@@ -282,34 +331,70 @@ void addLoan()
 		}
 		else
 		{
+			bool readerFound = false;
+			for (int i = 0; i < readerCount; i++)
+			{
+				if (readers[i].readerID == newLoan.readerID)
+				{
+					readerFound = true;
+					break;
+				}
+			}
+
+			if (!readerFound)
+			{
+				cout << "Reader with ID " << newLoan.readerID << " not found. Please add a new reader.\n";
+
+				if (readerCount >= MAX_READERS)
+				{
+					cerr << "Error: Maximum number of readers reached.\n";
+					return;
+				}
+
+				Reader newReader;
+				newReader.readerID = newLoan.readerID;
+
+				cin.ignore();
+				cout << "Enter reader's first name: ";
+				getline(cin, newReader.firstName);
+
+				cout << "Enter reader's last name: ";
+				getline(cin, newReader.lastName);
+
+				cout << "Enter reader's contact email: ";
+				getline(cin, newReader.contactEmail);
+
+				cout << "Enter reader's phone number: ";
+				getline(cin, newReader.phoneNumber);
+
+				newReader.activeLoans = 0;
+
+				readers[readerCount++] = newReader;
+
+				cout << "Reader added successfully!\n";
+			}
 			break;
 		}
 	}
+
 	cin.ignore();
+	cout << "Enter ISBN: ";
+	getline(cin, newLoan.ISBN);
 
-	while (true)
+	bool isAlreadyOnLoan = false;
+	for (int i = 0; i < loanCount; i++)
 	{
-		cout << "Enter ISBN: ";
-		getline(cin, newLoan.ISBN);
-
-		bool isAlreadyOnLoan = false;
-		for (int i = 0; i < loanCount; i++)
+		if (loans[i].ISBN == newLoan.ISBN && !loans[i].isReturned)
 		{
-			if (loans[i].ISBN == newLoan.ISBN && !loans[i].isReturned)
-			{
-				isAlreadyOnLoan = true;
-				break;
-			}
-		}
-
-		if (isAlreadyOnLoan)
-		{
-			cerr << "Error: This book is already on loan. Please edit the loan in the EDIT DATA MENU if the book has been returned.\n";
-		}
-		else
-		{
+			isAlreadyOnLoan = true;
 			break;
 		}
+	}
+
+	if (isAlreadyOnLoan)
+	{
+		cerr << "Error: This book is already on loan and has not been returned. Please edit the loan or choose another ISBN.\n";
+		return; // Exit if the book is already on loan
 	}
 
 	while (true)
@@ -366,7 +451,6 @@ void saveDataToFile()
 		return;
 	}
 
-	// Save authors data
 	for (int i = 0; i < authorCount; i++)
 	{
 		authorsFile << authors[i].authorID << ";"
@@ -386,9 +470,8 @@ void saveDataToFile()
 	for (int i = 0; i < bookCount; i++)
 	{
 		booksFile << books[i].ISBN << ";"
-			/*<< books[i].barcode << ";"*/
 			<< books[i].title << ";"
-			<< books[i].author.authorID << endl; // Include authorID
+			<< books[i].author.authorID << endl;
 	}
 	booksFile.close();
 
@@ -473,7 +556,6 @@ void readDataFromFile()
 		return;
 	}
 
-	// Read books data
 	while (getline(booksFile, line))
 	{
 		stringstream ss(line);
@@ -482,16 +564,14 @@ void readDataFromFile()
 		getline(ss, books[bookCount].ISBN, ';');
 		getline(ss, books[bookCount].title, ';');
 
-		// Parse and assign the authorID
 		getline(ss, temp, ';');
 		int authorID = stoi(temp);
 
-		// Find the corresponding Author
 		for (int i = 0; i < authorCount; ++i)
 		{
 			if (authors[i].authorID == authorID)
 			{
-				books[bookCount].author = authors[i]; // Link Author to Book
+				books[bookCount].author = authors[i];
 				break;
 			}
 		}
@@ -504,6 +584,7 @@ void readDataFromFile()
 		}
 	}
 	booksFile.close();
+
 
 	ifstream loansFile("loans.txt");
 	if (!loansFile.is_open())
@@ -581,13 +662,13 @@ void readDataFromFile()
 
 void displayAuthors()
 {
-	cout << "\nAUTHORS:\n";
+	cout << "\n===== AUTHORS =====\n";
 	if (authorCount > 0)
 	{
 		cout << left << setw(10) << "ID"
 			<< setw(20) << "First Name"
 			<< setw(20) << "Last Name" << endl;
-		cout << "---------------------------------------------------------------------------------------" << endl;
+		cout << "-------------------------------------------------------" << endl;
 
 		for (int i = 0; i < authorCount; i++)
 		{
@@ -595,16 +676,19 @@ void displayAuthors()
 				<< setw(20) << authors[i].firstName
 				<< setw(20) << authors[i].lastName << endl;
 		}
+
+		cout << endl;
 	}
 	else
 	{
-		cout << "No authors found.\n";
+		cout << "No authors found.\n\n";
 	}
+
 }
 
 void displayBooks()
 {
-	cout << "\nBOOKS:\n";
+	cout << "\n===== BOOKS =====\n";
 	if (bookCount > 0)
 	{
 		cout << left << setw(15) << "ISBN"
@@ -623,11 +707,12 @@ void displayBooks()
 	{
 		cout << "No books found.\n";
 	}
+
 }
 
 void displayLoans()
 {
-	cout << "\nLOANS:\n";
+	cout << "\n===== LOANS =====\n";
 	if (loanCount > 0)
 	{
 		cout << left << setw(10) << "Loan ID"
@@ -656,11 +741,12 @@ void displayLoans()
 	{
 		cout << "No loans found.\n";
 	}
+
 }
 
 void displayReaders()
 {
-	cout << "\nREADERS:\n";
+	cout << "\n===== READERS =====\n";
 	if (readerCount > 0)
 	{
 		cout << left << setw(10) << "Reader ID"
@@ -677,7 +763,7 @@ void displayReaders()
 				<< setw(20) << readers[i].firstName
 				<< setw(20) << readers[i].lastName
 				<< setw(30) << readers[i].contactEmail
-				<< setw(15) << readers[i].phoneNumber 
+				<< setw(15) << readers[i].phoneNumber
 				<< setw(10) << readers[i].activeLoans << endl;
 		}
 	}
@@ -685,6 +771,7 @@ void displayReaders()
 	{
 		cout << "No readers found.\n";
 	}
+
 }
 
 void displayAllData()
@@ -739,34 +826,17 @@ void editBook(string ISBNToEdit)
 			cout << "Editing book with ISBN: " << books[i].ISBN << endl;
 			cin.ignore();
 
-			cout << "Current Title: " << books[i].title << endl;
-			cout << "Enter new title (leave empty to keep current): ";
+			cout << "Current title: " << books[i].title << endl;
+			cout << "Enter new title: ";
 
 			string newTitle;
 
 			getline(cin, newTitle);
-			if (!newTitle.empty())
-			{
-				books[i].title = newTitle;
-			}
 
-			// Edit author details (optional, as author is a nested struct)
-			cout << "Current Author: " << books[i].author.firstName << " " << books[i].author.lastName << endl;
-			cout << "Would you like to change the author? (yes/no): ";
-
-			string changeAuthor;
-
-			getline(cin, changeAuthor);
-
-			if (changeAuthor == "yes")
-			{
-				cout << "Enter new author's first name: ";
-				getline(cin, books[i].author.firstName);
-				cout << "Enter new author's last name: ";
-				getline(cin, books[i].author.lastName);
-			}
+			books[i].title = newTitle;
 
 			cout << "Book updated successfully!\n";
+
 			break;
 		}
 	}
@@ -1327,39 +1397,3 @@ int calculateTotalActiveLoans(Reader readers[], int readerCount)
 	return totalActiveLoans;
 }
 
-Author calculateMostBorrowedAuthor(Loan loans[], int loanCount, Book books[], int bookCount)
-{
-	int authorLoanCount[MAX_AUTHORS] = { 0 };  // Array to track loan counts for each author
-
-	// Loop through loans to count how many times each author has been borrowed
-	for (int i = 0; i < loanCount; i++)
-	{
-		if (!loans[i].isReturned)  // Consider only active loans
-		{
-			// Find the book's author based on ISBN
-			for (int j = 0; j < bookCount; j++)
-			{
-				if (books[j].ISBN == loans[i].ISBN)
-				{
-					// Increment the loan count for this author
-					authorLoanCount[books[j].author.authorID]++;
-					break;
-				}
-			}
-		}
-	}
-
-	// Find the author with the maximum number of loans
-	int maxLoans = 0;
-	int mostBorrowedAuthorID = 0;
-	for (int i = 0; i < MAX_AUTHORS; i++)
-	{
-		if (authorLoanCount[i] > maxLoans)
-		{
-			maxLoans = authorLoanCount[i];
-			mostBorrowedAuthorID = i;
-		}
-	}
-
-	return authors[mostBorrowedAuthorID];  // Return the most borrowed author
-}
