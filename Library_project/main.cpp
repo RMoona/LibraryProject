@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include "Utils.h"
 #include "LibraryEntities.h"
 
@@ -7,6 +6,7 @@ using namespace std;
 
 int main()
 {
+	void checkAndCreateFiles();
 	int mainMenuChoice;
 	int totalActiveLoans = 0;
 
@@ -56,7 +56,7 @@ int main()
 					cout << "Viewing part of data...\n";
 
 					int partDataChoice;
-					
+
 					do
 					{
 						cout << "\nPART OF DATA MENU\n";
@@ -77,7 +77,6 @@ int main()
 							readDataFromFile();
 							sortAuthorsByLastName(authors, authorCount);
 							displayAuthors();
-							cout << endl;
 
 							break;
 

@@ -11,8 +11,6 @@
 19;Charlotte;Miller;charlotte.miller@example.com;555-4567;1
 20;Lucas;Lopez;lucas.lopez@example.com;555-8901;0
 21;Eva;Aguilera;eva.aguilera@example.com;555-1236;0
-22;Ramona;Malnupe;rm@gmail.com;555-4585;1
-23;Anders;Overfors;ande@gmail.com;555-4512;1
 7;Isabella;Martinez;isabella.martinez@example.com;555-7788;0
 8;Benjamin;Davis;benjamin.davis@example.com;555-9900;0
 9;Ava;Rodriguez;ava.rodriguez@example.com;555-1112;0
@@ -20,4 +18,3 @@
 11;Alice;Johnson;alice.johnson@example.com;555-1234;1
 12;David;Smith;david.smith@example.com;555-5678;0
 13;Emily;Brown;emily.brown@example.com;555-9012;2
-55;gggg;tttt;ddd@gmail.com;555-4141;1

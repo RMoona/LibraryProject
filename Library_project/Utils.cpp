@@ -20,6 +20,49 @@ int readerCount = 0;
 Loan loans[MAX_LOANS];
 int loanCount = 0;
 
+void checkAndCreateFiles()
+{
+	ifstream authorsFile("authors.txt");
+	if (!authorsFile)
+	{
+		ofstream createFile("authors.txt");
+		if (!createFile.is_open())
+		{
+			cerr << "Failed to create authors.txt\n";
+		}
+	}
+
+	ifstream booksFile("books.txt");
+	if (!booksFile)
+	{
+		ofstream createFile("books.txt");
+		if (!createFile.is_open())
+		{
+			cerr << "Failed to create books.txt\n";
+		}
+	}
+
+	ifstream readersFile("readers.txt");
+	if (!readersFile)
+	{
+		ofstream createFile("readers.txt");
+		if (!createFile.is_open())
+		{
+			cerr << "Failed to create readers.txt\n";
+		}
+	}
+
+	ifstream loansFile("loans.txt");
+	if (!loansFile)
+	{
+		ofstream createFile("loans.txt");
+		if (!createFile.is_open())
+		{
+			cerr << "Failed to create loans.txt\n";
+		}
+	}
+}
+
 void addAuthor()
 {
 	if (authorCount >= MAX_AUTHORS)
@@ -466,7 +509,7 @@ void saveDataToFile()
 		return;
 	}
 
-	// Save books data, including the authorID
+	// Save books data including the authorID
 	for (int i = 0; i < bookCount; i++)
 	{
 		booksFile << books[i].ISBN << ";"
@@ -522,12 +565,6 @@ void readDataFromFile()
 
 	ifstream authorsFile("authors.txt");
 
-	if (!authorsFile.is_open())
-	{
-		cerr << "Failed to open authors file.\n";
-		return;
-	}
-
 	string line;
 
 	while (getline(authorsFile, line))
@@ -550,11 +587,7 @@ void readDataFromFile()
 	authorsFile.close();
 
 	ifstream booksFile("books.txt");
-	if (!booksFile.is_open())
-	{
-		cerr << "Failed to open books file.\n";
-		return;
-	}
+
 
 	while (getline(booksFile, line))
 	{
@@ -585,13 +618,7 @@ void readDataFromFile()
 	}
 	booksFile.close();
 
-
 	ifstream loansFile("loans.txt");
-	if (!loansFile.is_open())
-	{
-		cerr << "Failed to open loans file for writing.\n";
-		return;
-	}
 
 	if (loansFile.is_open())
 	{
@@ -616,7 +643,7 @@ void readDataFromFile()
 
 			if (loanCount == MAX_LOANS)
 			{
-				cout << "Max loan count reached only " << MAX_LOANS << " loan entries displayed" << endl;
+				cout << "Max loan count reached only " << MAX_LOANS << " loan entries allowed." << endl;
 				break;
 			}
 		}
@@ -625,11 +652,6 @@ void readDataFromFile()
 	}
 
 	ifstream readersFile("readers.txt");
-	if (!readersFile.is_open())
-	{
-		cerr << "Failed to open readers file for writing.\n";
-		return;
-	}
 
 	if (readersFile.is_open())
 	{
@@ -651,7 +673,7 @@ void readDataFromFile()
 
 			if (readerCount == MAX_READERS)
 			{
-				cout << "Max reader count reached only " << MAX_READERS << " reader entries displayed" << endl;
+				cout << "Max reader count reached only " << MAX_READERS << " reader entries allowed" << endl;
 				break;
 			}
 		}
@@ -865,7 +887,7 @@ void editReader(int readerIDToEdit)
 
 			string newFirstName;
 
-			getline(cin, newFirstName);  // Read input as string
+			getline(cin, newFirstName);
 
 			if (!newFirstName.empty())
 			{
@@ -938,11 +960,11 @@ void editLoan(int loanIDToEdit)
 			int newReaderID;
 			string inputReaderID;
 
-			getline(cin, inputReaderID);  // Read input as string
+			getline(cin, inputReaderID);
 
 			if (!inputReaderID.empty())
 			{
-				newReaderID = stoi(inputReaderID);  // Convert to integer
+				newReaderID = stoi(inputReaderID);
 				loans[i].readerID = newReaderID;
 			}
 
@@ -1199,19 +1221,19 @@ void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount
 	cin.ignore();
 	getline(cin, authorLastName);
 
-	bool found = false;
+	bool loansFound = false;
 
 	for (int i = 0; i < loanCount; i++)
 	{
-		// Search for the book associated with the loan using the ISBN
 		for (int j = 0; j < bookCount; j++)
 		{
-			// Check if the loan's ISBN matches the book's ISBN, and if the author's name matches
+			// Check if the ISBN in loans matches the ISBN in books, and if the author's name also matches
 			if (loans[i].ISBN == books[j].ISBN && books[j].author.lastName == authorLastName)
 			{
-				if (!found)
+				// To print out table headers only once
+				if (loansFound == false)
 				{
-					cout << "Loans found for Author " << books[j].author.firstName
+					cout << "Loans found for author " << books[j].author.firstName
 						<< " " << books[j].author.lastName << ":\n";
 					cout << left << setw(10) << "Loan ID"
 						<< setw(15) << "Reader ID"
@@ -1220,7 +1242,7 @@ void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount
 						<< setw(15) << "Due Date"
 						<< setw(10) << "Returned" << endl;
 					cout << "---------------------------------------------------------------------------------------" << endl;
-					found = true;
+					loansFound = true;
 				}
 
 				cout << left << setw(10) << loans[i].loanID
@@ -1241,9 +1263,9 @@ void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount
 		}
 	}
 
-	if (!found)
+	if (!loansFound)
 	{
-		cout << "No loans found for Author " << authorLastName << ".\n";
+		cout << "No loans found for author " << authorLastName << ".\n";
 	}
 }
 
@@ -1254,7 +1276,7 @@ void deleteAuthor(int authorID)
 	{
 		if (authors[i].authorID == authorID)
 		{
-			for (int j = i; j < authorCount - 1; j++)
+			for (int j = i; j < authorCount; j++)
 			{
 				authors[j] = authors[j + 1];  // Move the authors to the left (up in the file) not to have empty lines
 			}
@@ -1277,10 +1299,11 @@ void deleteBook(const string& ISBN)
 	{
 		if (books[i].ISBN == ISBN)
 		{
-			for (int j = i; j < bookCount - 1; j++)
+			for (int j = i; j < bookCount; j++)
 			{
 				books[j] = books[j + 1];
 			}
+
 			bookCount--;
 			cout << "Book with ISBN " << ISBN << " deleted.\n";
 			deleted = true;
@@ -1300,7 +1323,7 @@ void deleteReader(int readerID)
 	{
 		if (readers[i].readerID == readerID)
 		{
-			for (int j = i; j < readerCount - 1; j++)
+			for (int j = i; j < readerCount; j++)
 			{
 				readers[j] = readers[j + 1];
 			}
@@ -1323,7 +1346,7 @@ void deleteLoan(int loanID)
 	{
 		if (loans[i].loanID == loanID)
 		{
-			for (int j = i; j < loanCount - 1; j++)
+			for (int j = i; j < loanCount; j++)
 			{
 				loans[j] = loans[j + 1];
 			}
@@ -1341,7 +1364,7 @@ void deleteLoan(int loanID)
 
 void sortAuthorsByLastName(Author authors[], int authorCount)
 {
-	for (int i = 0; i < authorCount - 1; i++)
+	for (int i = 0; i < authorCount; i++)
 	{
 		for (int j = i + 1; j < authorCount; j++)
 		{
@@ -1357,7 +1380,7 @@ void sortAuthorsByLastName(Author authors[], int authorCount)
 
 void sortReadersByReaderID(Reader readers[], int readerCount)
 {
-	for (int i = 0; i < readerCount - 1; i++)
+	for (int i = 0; i < readerCount; i++)
 	{
 		for (int j = i + 1; j < readerCount; j++)
 		{
@@ -1373,7 +1396,7 @@ void sortReadersByReaderID(Reader readers[], int readerCount)
 
 void sortBooksByAuthorLastName(Book books[], int bookCount)
 {
-	for (int i = 0; i < bookCount - 1; i++)
+	for (int i = 0; i < bookCount; i++)
 	{
 		for (int j = i + 1; j < bookCount; j++)
 		{
@@ -1396,4 +1419,3 @@ int calculateTotalActiveLoans(Reader readers[], int readerCount)
 	}
 	return totalActiveLoans;
 }
-

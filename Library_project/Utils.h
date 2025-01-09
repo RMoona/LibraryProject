@@ -1,7 +1,5 @@
 #pragma once
 
-#include <fstream>
-#include <string>
 #include "LibraryEntities.h"
 
 //global variables
@@ -14,6 +12,7 @@ extern int loanCount;
 extern Reader readers[MAX_READERS];
 extern int readerCount;
 
+void checkAndCreateFiles();
 void addAuthor();
 void addBook();
 void addReader();
