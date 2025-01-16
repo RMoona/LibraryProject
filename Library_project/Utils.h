@@ -2,7 +2,6 @@
 
 #include "LibraryEntities.h"
 
-//global variables
 extern Author authors[MAX_AUTHORS];
 extern int authorCount;
 extern Book books[MAX_BOOKS];
@@ -17,7 +16,7 @@ void addAuthor();
 void addBook();
 void addReader();
 void addLoan();
-void calculateActiveLoans(Loan loans[], int loanCount, Reader readers[], int readerCount);
+void calculateActiveLoans();
 void saveDataToFile();
 void readDataFromFile();
 void displayAuthors();
@@ -29,16 +28,16 @@ void editAuthor(int authorIDToEdit);
 void editBook(string ISBNToEdit);
 void editReader(int readerIDToEdit);
 void editLoan(int loanIDToEdit);
-void searchLoanByLoanID(Loan loans[], int loanCount); //search by int
-void searchLoanByISBN(Loan loans[], int loanCount); //search by string
-void searchLoanByBorrowDate(Loan loans[], int loanCount);
-void searchLoanByReturnStatus(Loan loans[], int loanCount);
-void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount);
+void searchLoanByLoanID();
+void searchLoanByISBN();
+void searchLoanByBorrowDate();
+void searchLoanByReturnStatus();
+void searchLoanByAuthor();
 void deleteAuthor(int authorID);
 void deleteBook(const string& ISBN);
 void deleteReader(int readerID);
 void deleteLoan(int loanID);
-void sortAuthorsByLastName(Author authors[], int authorCount);
-void sortReadersByReaderID(Reader readers[], int readerCount);
-void sortBooksByAuthorLastName(Book books[], int bookCount); //sorting by complex structure
-int calculateTotalActiveLoans(Reader readers[], int readerCount);
+void sortAuthorsByLastName();
+void sortReadersByReaderID();
+void sortBooksByAuthorLastName(); //sorting by complex structure
+int calculateTotalActiveLoans();

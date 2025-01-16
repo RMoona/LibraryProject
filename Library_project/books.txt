@@ -2,7 +2,7 @@
 9780141439518;Pride and Prejudice;2
 9780142437179;Adventures of Huckleberry Finn;3
 9780156907392;Mrs. Dalloway;4
-9780684801223;The Old Man and the Sea;5
+9780684801223;The Old Man and the Pee;5
 9780062073488;Murder on the Orient Express;6
 9780439139595;Harry Potter and the Goblet of Fire;7
 9780743477116;Hamlet;8

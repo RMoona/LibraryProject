@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Utils.h"
-#include "LibraryEntities.h"
 
 using namespace std;
 
@@ -75,7 +74,7 @@ int main()
 						case 1:
 							cout << "Viewing authors...\n";
 							readDataFromFile();
-							sortAuthorsByLastName(authors, authorCount);
+							sortAuthorsByLastName();
 							displayAuthors();
 
 							break;
@@ -83,7 +82,7 @@ int main()
 						case 2:
 							cout << "Viewing books...\n";
 							readDataFromFile();
-							sortBooksByAuthorLastName(books, bookCount);
+							sortBooksByAuthorLastName();
 							displayBooks();
 
 							break;
@@ -91,7 +90,7 @@ int main()
 						case 3:
 							cout << "Viewing readers...\n";
 							readDataFromFile();
-							sortReadersByReaderID(readers, readerCount);
+							sortReadersByReaderID();
 							displayReaders();
 
 							break;
@@ -101,7 +100,7 @@ int main()
 							readDataFromFile();
 							displayLoans();
 
-							totalActiveLoans = calculateTotalActiveLoans(readers, readerCount);
+							totalActiveLoans = calculateTotalActiveLoans();
 							cout << "Total active loans: " << totalActiveLoans << endl;
 
 							break;
@@ -180,7 +179,7 @@ int main()
 					cout << "Adding a new loan...\n";
 					readDataFromFile();
 					addLoan();
-					calculateActiveLoans(loans, loanCount, readers, readerCount);
+					calculateActiveLoans();
 					saveDataToFile();
 
 					break;
@@ -397,35 +396,35 @@ int main()
 				case 1:
 					cout << "Searching loans by loan ID...\n";
 					readDataFromFile();
-					searchLoanByLoanID(loans, loanCount);
+					searchLoanByLoanID();
 
 					break;
 
 				case 2:
 					cout << "Searching loans by ISBN...\n";
 					readDataFromFile();
-					searchLoanByISBN(loans, loanCount);
+					searchLoanByISBN();
 
 					break;
 
 				case 3:
 					cout << "Searching loans by borrow date...\n";
 					readDataFromFile();
-					searchLoanByBorrowDate(loans, loanCount);
+					searchLoanByBorrowDate();
 
 					break;
 
 				case 4:
 					cout << "Searching loans by return status...\n";
 					readDataFromFile();
-					searchLoanByReturnStatus(loans, loanCount);
+					searchLoanByReturnStatus();
 
 					break;
 
 				case 5:
 					cout << "Searching loans by author...\n";
 					readDataFromFile();
-					searchLoanByAuthor(loans, loanCount, books, bookCount);
+					searchLoanByAuthor();
 
 					break;
 

@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// Arrays and counters
 Author authors[MAX_AUTHORS];
 int authorCount = 0;
 
@@ -292,7 +291,7 @@ void addReader()
 	cout << "Reader added successfully!\n";
 }
 
-void calculateActiveLoans(Loan loans[], int loanCount, Reader readers[], int readerCount)
+void calculateActiveLoans()
 {
 	for (int i = 0; i < readerCount; i++)
 	{
@@ -480,7 +479,7 @@ void addLoan()
 
 	loans[loanCount++] = newLoan;
 
-	calculateActiveLoans(loans, loanCount, readers, readerCount);
+	calculateActiveLoans();
 
 	cout << "Loan added successfully!\n";
 }
@@ -1026,7 +1025,7 @@ void editLoan(int loanIDToEdit)
 
 			cout << "Loan updated successfully!\n";
 
-			calculateActiveLoans(loans, loanCount, readers, readerCount);
+			calculateActiveLoans();
 
 			break;
 		}
@@ -1038,7 +1037,7 @@ void editLoan(int loanIDToEdit)
 	}
 }
 
-void searchLoanByLoanID(Loan loans[], int loanCount)
+void searchLoanByLoanID()
 {
 	int loanID;
 	cout << "Enter Loan ID to search: ";
@@ -1075,7 +1074,7 @@ void searchLoanByLoanID(Loan loans[], int loanCount)
 	cout << "Loan not found.\n";
 }
 
-void searchLoanByISBN(Loan loans[], int loanCount)
+void searchLoanByISBN()
 {
 	string ISBN;
 	cout << "Enter ISBN to search: ";
@@ -1112,7 +1111,7 @@ void searchLoanByISBN(Loan loans[], int loanCount)
 	cout << "Loan not found.\n";
 }
 
-void searchLoanByBorrowDate(Loan loans[], int loanCount)
+void searchLoanByBorrowDate()
 {
 	int borrowDate;
 	cout << "Enter borrow date (YYYYMMDD): ";
@@ -1158,7 +1157,7 @@ void searchLoanByBorrowDate(Loan loans[], int loanCount)
 	}
 }
 
-void searchLoanByReturnStatus(Loan loans[], int loanCount)
+void searchLoanByReturnStatus()
 {
 	char returnStatus;
 	cout << "Enter return status (y/n): ";
@@ -1213,7 +1212,7 @@ void searchLoanByReturnStatus(Loan loans[], int loanCount)
 	}
 }
 
-void searchLoanByAuthor(Loan loans[], int loanCount, Book books[], int bookCount)
+void searchLoanByAuthor()
 {
 	string authorLastName;
 
@@ -1362,7 +1361,7 @@ void deleteLoan(int loanID)
 	}
 }
 
-void sortAuthorsByLastName(Author authors[], int authorCount)
+void sortAuthorsByLastName()
 {
 	for (int i = 0; i < authorCount; i++)
 	{
@@ -1378,7 +1377,7 @@ void sortAuthorsByLastName(Author authors[], int authorCount)
 	}
 }
 
-void sortReadersByReaderID(Reader readers[], int readerCount)
+void sortReadersByReaderID()
 {
 	for (int i = 0; i < readerCount; i++)
 	{
@@ -1394,7 +1393,7 @@ void sortReadersByReaderID(Reader readers[], int readerCount)
 	}
 }
 
-void sortBooksByAuthorLastName(Book books[], int bookCount)
+void sortBooksByAuthorLastName()
 {
 	for (int i = 0; i < bookCount; i++)
 	{
@@ -1410,7 +1409,7 @@ void sortBooksByAuthorLastName(Book books[], int bookCount)
 	}
 }
 
-int calculateTotalActiveLoans(Reader readers[], int readerCount)
+int calculateTotalActiveLoans()
 {
 	int totalActiveLoans = 0;
 	for (int i = 0; i < readerCount; i++)
